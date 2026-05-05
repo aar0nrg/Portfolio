@@ -1,0 +1,43 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "settings"
+    label: "⚙️ Paramètres du site"
+    files:
+      - name: "general"
+        label: "Identité & Infos générales"
+        file: "data/settings.json"
+        fields:
+          - { label: "Ton nom", name: "name", widget: "string", default: "VOTRE NOM" }
+          - { label: "Tagline — optionnel", name: "tagline", widget: "string", required: false, default: "" }
+          - { label: "Email de contact", name: "email", widget: "string", default: "contact@votresite.com" }
+          - { label: "Instagram — optionnel", name: "instagram", widget: "string", required: false, default: "" }
+          - { label: "YouTube — optionnel", name: "youtube", widget: "string", required: false, default: "" }
+          - { label: "TikTok — optionnel", name: "tiktok", widget: "string", required: false, default: "" }
+          - { label: "Bio (texte about)", name: "bio", widget: "text", default: "Votre bio ici." }
+          - { label: "Photo hero", name: "hero_image", widget: "image", required: false }
+          - { label: "Photo portrait (section about)", name: "portrait_image", widget: "image", required: false }
+
+  - name: "projects"
+    label: "📁 Projets"
+    folder: "data/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Titre du projet", name: "title", widget: "string" }
+      - { label: "Slug (URL)", name: "slug", widget: "string" }
+      - { label: "Tagline", name: "tagline", widget: "string", required: false, default: "" }
+      - { label: "Client / Marque", name: "client", widget: "string", required: false, default: "" }
+      - { label: "Année", name: "year", widget: "string", required: false, default: "" }
+      - { label: "Catégorie", name: "category", widget: "select", options: ["Commercial", "Fashion", "Automotive", "Travel", "Music", "Personal"], required: false }
+      - { label: "Image de couverture", name: "cover_image", widget: "image", required: false }
+      - { label: "Vidéo (lien embed Vimeo/YouTube)", name: "video_url", widget: "string", required: false, default: "" }
+      - { label: "Description", name: "description", widget: "text", required: false, default: "" }
+      - { label: "Photos du projet", name: "gallery", widget: "list", required: false, field: { label: "Photo", name: "image", widget: "image" } }
+      - { label: "Ordre d'affichage", name: "order", widget: "number", default: 99 }
+      - { label: "Visible sur le site", name: "published", widget: "boolean", default: true }

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="site-title">Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Space+Mono:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --beige: #e8e4dd;
+      --beige-dark: #d4cfc7;
+      --black: #0a0a0a;
+      --dark: #141414;
+      --white: #f5f2ee;
+      --mono: 'Space Mono', monospace;
+      --script: 'Caveat', cursive;
+      --serif: 'EB Garamond', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--beige);
+      color: var(--black);
+      font-family: var(--mono);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--black);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+    }
+    .cursor.hover {
+      width: 40px; height: 40px;
+      background: transparent;
+      border: 1px solid var(--black);
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 70px;
+      background: var(--beige);
+      border-bottom: 1px solid rgba(10,10,10,0.1);
+    }
+
+    .nav-left {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-left a, .nav-right a {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .nav-left a:hover, .nav-right a:hover { opacity: 1; }
+    .nav-left a.active { opacity: 1; text-decoration: underline; }
+
+    /* PROJECTS DROPDOWN */
+    .nav-projects { position: relative; }
+    .nav-projects > a { display: flex; align-items: center; gap: 6px; }
+    .nav-projects > a::after {
+      content: '↓';
+      font-size: 10px;
+      transition: transform 0.2s;
+    }
+    .nav-projects:hover > a::after { transform: rotate(180deg); }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      background: var(--beige);
+      border: 1px solid rgba(10,10,10,0.15);
+      min-width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-projects:hover .dropdown {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+    .dropdown a {
+      display: block;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(10,10,10,0.08);
+      white-space: nowrap;
+    }
+    .dropdown a:last-child { border-bottom: none; }
+
+    .nav-logo {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    /* HERO */
+    #hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-img, linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%));
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.85);
+    }
+
+    .hero-name {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--script);
+      font-size: clamp(80px, 12vw, 160px);
+      color: white;
+      white-space: nowrap;
+      line-height: 1;
+      text-shadow: 0 2px 40px rgba(0,0,0,0.3);
+      animation: fadeUp 1.2s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-meta {
+      position: absolute;
+      bottom: 8%;
+      right: 6%;
+      text-align: right;
+      color: white;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 2;
+      animation: fadeUp 1.4s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    @keyframes fadeUpSimple {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-meta { animation-name: fadeUpSimple; transform: none; }
+
+    /* PROJECTS LIST */
+    #projects {
+      padding-top: 0;
+    }
+
+    .projects-header {
+      padding: 60px 40px 20px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .projects-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 24px;
+    }
+
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      color: var(--black);
+      opacity: 0.4;
+      cursor: none;
+      transition: opacity 0.2s;
+      padding: 4px 0;
+      border-bottom: 1px solid transparent;
+    }
+    .filter-btn:hover { opacity: 0.7; }
+    .filter-btn.active {
+      opacity: 1;
+      border-bottom-color: var(--black);
+    }
+
+    /* PROJECT BANNERS */
+    .project-banner {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+      cursor: none;
+    }
+
+    .project-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s ease, filter 0.4s ease;
+      filter: brightness(0.75);
+    }
+
+    .project-banner:hover img {
+      transform: scale(1.03);
+      filter: brightness(0.6);
+    }
+
+    .project-banner-info {
+      position: absolute;
+      bottom: 60px;
+      left: 60px;
+      color: white;
+    }
+
+    .project-banner-title {
+      font-family: var(--mono);
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .project-banner-tagline {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .project-banner-cta {
+      position: absolute;
+      bottom: 60px;
+      right: 60px;
+      color: white;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .project-banner:hover .project-banner-cta {
+      opacity: 0.8;
+      transform: translateX(0);
+    }
+
+    .project-banner[data-hidden="true"] { display: none; }
+
+    /* ABOUT */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 80vh;
+    }
+
+    .about-text {
+      background: var(--dark);
+      color: var(--white);
+      padding: 100px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 40px;
+    }
+
+    .about-bio {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 2.2;
+      opacity: 0.85;
+      max-width: 500px;
+    }
+
+    .about-signature {
+      margin-top: 50px;
+      font-family: var(--script);
+      font-size: 48px;
+      color: white;
+      opacity: 0.9;
+    }
+
+    .about-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* CONTACT */
+    #contact {
+      padding: 120px 80px;
+      text-align: center;
+      background: var(--beige);
+    }
+
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-bottom: 30px;
+    }
+
+    .contact-email {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 64px);
+      font-style: italic;
+      text-decoration: none;
+      color: var(--black);
+      border-bottom: 1px solid var(--black);
+      padding-bottom: 4px;
+      transition: opacity 0.2s;
+    }
+    .contact-email:hover { opacity: 0.6; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 40px;
+      background: var(--beige);
+      border-top: 1px solid rgba(10,10,10,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-socials a {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    .footer-socials a:hover { opacity: 1; }
+
+    /* PROJECT PAGE */
+    #projects-page { display: none; }
+    #projects-page.active {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: var(--beige);
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    /* PROJECT PAGE */
+    #project-page { display: none; }
+    #project-page.active {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: var(--beige);
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    .project-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 40px;
+      border-bottom: 1px solid rgba(10,10,10,0.1);
+      position: sticky;
+      top: 0;
+      background: var(--beige);
+      z-index: 10;
+    }
+
+    .back-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      color: var(--black);
+      cursor: none;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-btn:hover { opacity: 1; }
+
+    .project-page-title-wrap {
+      text-align: center;
+    }
+
+    .project-page-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .project-page-client {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.4;
+      margin-top: 3px;
+    }
+
+    .project-hero-full {
+      width: 100%;
+      height: 85vh;
+      object-fit: cover;
+    }
+
+    .project-page-meta {
+      padding: 50px 80px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .project-meta-left {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 2.5;
+    }
+
+    .meta-label { opacity: 0.4; }
+    .meta-value { opacity: 1; margin-bottom: 10px; }
+
+    .project-description {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-style: italic;
+      line-height: 1.7;
+      opacity: 0.8;
+    }
+
+    .project-video-wrap {
+      padding: 0 0 40px;
+    }
+
+    .project-video-wrap iframe {
+      width: 100%;
+      height: 56.25vw;
+      max-height: 85vh;
+      border: none;
+      display: block;
+    }
+
+    .project-gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 3px;
+      padding: 0 0 3px;
+    }
+
+    .project-gallery img {
+      width: 100%;
+      aspect-ratio: 3/2;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.3s;
+    }
+    .project-gallery img:hover { filter: brightness(0.85); }
+
+    .project-gallery img:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+      height: 100%;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* PLACEHOLDER for images not yet uploaded */
+    .img-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2a2a2a, #1c1c1c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .img-placeholder span {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="#hero" class="active" onclick="showHome()">Home</a>
+    <div class="nav-projects">
+      <a href="#" onclick="showProjectsPage(); return false;">Projects ↓</a>
+      <div class="dropdown" id="nav-dropdown">
+        <!-- populated by JS -->
+      </div>
+    </div>
+    <a href="#contact" onclick="showHome()">Contact</a>
+  </div>
+
+  <a href="#hero" class="nav-logo" id="nav-logo" onclick="showHome()">YOUR NAME</a>
+
+  <div class="nav-right">
+    <a href="#about" onclick="showHome()">About</a>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="home-page">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-name" id="hero-name">Your Name</div>
+    <div class="hero-meta" id="hero-meta">
+      CREATIVE DIRECTOR<br>
+      FILM · PHOTOGRAPHY
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-text">
+      <div class="about-label">— About</div>
+      <p class="about-bio reveal" id="about-bio">BIO À REMPLIR DANS LE PANNEAU ADMIN</p>
+      <div class="about-signature reveal" id="about-signature">Your Name</div>
+    </div>
+    <div class="about-image reveal">
+      <img id="portrait-img" src="" alt="Portrait" onerror="this.style.display='none'">
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-label reveal">— Contact</div>
+    <a class="contact-email reveal" id="contact-email" href="#">contact@votresite.com</a>
+    <br><br><br>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-copy" id="footer-copy">© 2024</span>
+    <div class="footer-socials" id="footer-socials">
+      <a id="social-instagram" href="#">Instagram</a>
+      <a id="social-youtube" href="#">YouTube</a>
+      <a id="social-tiktok" href="#">TikTok</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- PROJECTS PAGE (overlay) -->
+<div id="projects-page">
+  <div class="project-page-header">
+    <button class="back-btn" onclick="closeProjectsPage()">← Retour</button>
+    <div class="project-page-title-wrap">
+      <div class="project-page-title">Projects</div>
+    </div>
+    <div style="width:80px">
+      <div class="filter-bar" id="filter-bar" style="justify-content:flex-end">
+        <button class="filter-btn active" data-filter="all" onclick="filterProjects('all')">All</button>
+      </div>
+    </div>
+  </div>
+  <div id="projects-list"></div>
+</div>
+
+<!-- PROJECT PAGE (overlay) -->
+<div id="project-page">
+  <div class="project-page-header">
+    <button class="back-btn" onclick="closeProject()">← Retour</button>
+    <div class="project-page-title-wrap">
+      <div class="project-page-title" id="pp-title">—</div>
+      <div class="project-page-client" id="pp-client">—</div>
+    </div>
+    <div style="width:80px"></div>
+  </div>
+
+  <img id="pp-hero" class="project-hero-full" src="" alt="" onerror="this.style.background='#1a1a1a'">
+
+  <div class="project-video-wrap" id="pp-video-wrap" style="display:none">
+    <iframe id="pp-video" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="project-page-meta">
+    <div class="project-meta-left">
+      <div class="meta-label">Client</div>
+      <div class="meta-value" id="pp-meta-client">—</div>
+      <div class="meta-label">Année</div>
+      <div class="meta-value" id="pp-meta-year">—</div>
+      <div class="meta-label">Catégorie</div>
+      <div class="meta-value" id="pp-meta-category">—</div>
+    </div>
+    <p class="project-description" id="pp-description">—</p>
+  </div>
+
+  <div class="project-gallery" id="pp-gallery"></div>
+</div>
+
+<script>
+  // ─── CURSOR ───
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest('a, button, .filter-btn, .project-banner')) {
+      cursor.classList.add('hover');
+    } else {
+      cursor.classList.remove('hover');
+    }
+  });
+
+  // ─── LOAD DATA ───
+  let settings = {};
+  let projects = [];
+
+  async function loadSettings() {
+    try {
+      const r = await fetch('/data/settings.json');
+      settings = await r.json();
+      applySettings();
+    } catch(e) {
+      console.warn('Settings non chargés, utilisation des valeurs par défaut');
+    }
+  }
+
+  async function loadProjects() {
+    // On essaie de charger un index ou on scanne les fichiers connus
+    const slugs = [
+      'projet-01','projet-02','projet-03','projet-04','projet-05',
+      'projet-06','projet-07','projet-08','projet-09','projet-10'
+    ];
+    const loaded = [];
+    for (const slug of slugs) {
+      try {
+        const r = await fetch(`/data/projects/${slug}.json`);
+        if (r.ok) loaded.push(await r.json());
+      } catch(e) {}
+    }
+    // Trier par order
+    projects = loaded
+      .filter(p => p.published)
+      .sort((a, b) => (a.order || 99) - (b.order || 99));
+    renderProjects();
+    buildDropdown();
+    buildFilters();
+  }
+
+  function applySettings() {
+    const name = settings.name || 'VOTRE NOM';
+    document.getElementById('site-title').textContent = name + ' — Portfolio';
+    document.getElementById('nav-logo').textContent = name;
+    document.getElementById('hero-name').textContent = name;
+    document.getElementById('about-signature').textContent = name;
+    document.getElementById('footer-copy').textContent = `© ${new Date().getFullYear()} ${name}`;
+
+    if (settings.bio) document.getElementById('about-bio').textContent = settings.bio.toUpperCase();
+    if (settings.tagline) document.getElementById('hero-meta').innerHTML = settings.tagline.replace(' · ', '<br>').toUpperCase();
+    if (settings.email) {
+      const el = document.getElementById('contact-email');
+      el.textContent = settings.email;
+      el.href = 'mailto:' + settings.email;
+    }
+    if (settings.instagram) document.getElementById('social-instagram').href = settings.instagram;
+    if (settings.youtube) document.getElementById('social-youtube').href = settings.youtube;
+    if (settings.tiktok) document.getElementById('social-tiktok').href = settings.tiktok;
+
+    if (settings.hero_image) {
+      document.getElementById('hero-bg').style.backgroundImage = `url('${settings.hero_image}')`;
+    }
+    if (settings.portrait_image) {
+      document.getElementById('portrait-img').src = settings.portrait_image;
+    }
+  }
+
+  function renderProjects(filter = 'all') {
+    const list = document.getElementById('projects-list');
+    list.innerHTML = '';
+    const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+
+    filtered.forEach(p => {
+      const a = document.createElement('a');
+      a.className = 'project-banner reveal';
+      a.href = '#';
+      a.onclick = (e) => { e.preventDefault(); openProject(p.slug); };
+
+      a.innerHTML = `
+        <img src="${p.cover_image || ''}" alt="${p.title}"
+             onerror="this.parentElement.querySelector('.img-placeholder')?.remove(); this.style.display='none'">
+        <div class="img-placeholder" style="display:none"><span>Image à uploader</span></div>
+        <div class="project-banner-info">
+          <div class="project-banner-title">${p.title}</div>
+          <div class="project-banner-tagline">${p.tagline || ''}</div>
+        </div>
+        <div class="project-banner-cta">Voir le projet →</div>
+      `;
+
+      // Fix placeholder visibility
+      const img = a.querySelector('img');
+      const ph = a.querySelector('.img-placeholder');
+      img.addEventListener('error', () => {
+        img.style.display = 'none';
+        if (ph) ph.style.display = 'flex';
+      });
+      img.addEventListener('load', () => {
+        if (ph) ph.style.display = 'none';
+      });
+
+      list.appendChild(a);
+    });
+
+    observeReveal();
+  }
+
+  function buildDropdown() {
+    const dd = document.getElementById('nav-dropdown');
+    dd.innerHTML = '';
+    projects.forEach(p => {
+      const a = document.createElement('a');
+      a.href = '#';
+      a.textContent = p.title;
+      a.onclick = (e) => { e.preventDefault(); openProject(p.slug); };
+      dd.appendChild(a);
+    });
+  }
+
+  function buildFilters() {
+    const categories = [...new Set(projects.map(p => p.category).filter(Boolean))];
+    const bar = document.getElementById('filter-bar');
+    bar.innerHTML = `<button class="filter-btn active" data-filter="all" onclick="filterProjects('all')">All</button>`;
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-filter', cat);
+      btn.textContent = cat;
+      btn.onclick = () => filterProjects(cat);
+      bar.appendChild(btn);
+    });
+  }
+
+  function filterProjects(cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.getAttribute('data-filter') === cat);
+    });
+    renderProjects(cat);
+  }
+
+  // ─── PROJECT PAGE ───
+  function openProject(slug) {
+    const p = projects.find(x => x.slug === slug);
+    if (!p) return;
+
+    document.getElementById('pp-title').textContent = p.title;
+    document.getElementById('pp-client').textContent = p.client || '';
+    document.getElementById('pp-hero').src = p.cover_image || '';
+    document.getElementById('pp-meta-client').textContent = p.client || '—';
+    document.getElementById('pp-meta-year').textContent = p.year || '—';
+    document.getElementById('pp-meta-category').textContent = p.category || '—';
+    document.getElementById('pp-description').textContent = p.description || '';
+
+    // Video
+    const vw = document.getElementById('pp-video-wrap');
+    if (p.video_url) {
+      document.getElementById('pp-video').src = p.video_url;
+      vw.style.display = 'block';
+    } else {
+      vw.style.display = 'none';
+    }
+
+    // Gallery
+    const gallery = document.getElementById('pp-gallery');
+    gallery.innerHTML = '';
+    (p.gallery || []).forEach(img => {
+      const el = document.createElement('img');
+      el.src = img;
+      el.alt = p.title;
+      gallery.appendChild(el);
+    });
+
+    const page = document.getElementById('project-page');
+    page.classList.add('active');
+    page.scrollTop = 0;
+    history.pushState({ project: slug }, '', `#${slug}`);
+  }
+
+  function closeProject() {
+    document.getElementById('project-page').classList.remove('active');
+    history.pushState({ projects: true }, '', '#projects');
+  }
+
+  function showHome() {
+    document.getElementById('project-page').classList.remove('active');
+    document.getElementById('projects-page').classList.remove('active');
+    history.pushState({}, '', '/');
+  }
+
+  function showProjectsPage() {
+    document.getElementById('projects-page').classList.add('active');
+    renderProjects('all');
+    buildFilters();
+    history.pushState({ projects: true }, '', '#projects');
+  }
+
+  function closeProjectsPage() {
+    document.getElementById('projects-page').classList.remove('active');
+    history.pushState({}, '', '/');
+  }
+
+  // Handle browser back button
+  window.addEventListener('popstate', (e) => {
+    if (!e.state || !e.state.project) {
+      document.getElementById('project-page').classList.remove('active');
+    }
+    if (!e.state || !e.state.projects) {
+      document.getElementById('projects-page').classList.remove('active');
+    }
+  });
+
+  // ─── SCROLL REVEAL ───
+  function observeReveal() {
+    const els = document.querySelectorAll('.reveal:not(.visible)');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(el => obs.observe(el));
+  }
+
+  // ─── INIT ───
+  loadSettings();
+  loadProjects();
+  observeReveal();
+</script>
+
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
+</body>
+</html>
