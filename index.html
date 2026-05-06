@@ -82,42 +82,8 @@
     .nav-left a:hover, .nav-right a:hover { opacity: 1; }
     .nav-left a.active { opacity: 1; text-decoration: underline; }
 
-    /* PROJECTS DROPDOWN */
-    .nav-projects { position: relative; }
-    .nav-projects > a { display: flex; align-items: center; gap: 6px; }
-    .nav-projects > a::after {
-      content: '↓';
-      font-size: 10px;
-      transition: transform 0.2s;
-    }
-    .nav-projects:hover > a::after { transform: rotate(180deg); }
-
-    .dropdown {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      background: var(--beige);
-      border: 1px solid rgba(10,10,10,0.15);
-      min-width: 200px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(-8px);
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .nav-projects:hover .dropdown {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(0);
-    }
-    .dropdown a {
-      display: block;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(10,10,10,0.08);
-      white-space: nowrap;
-    }
-    .dropdown a:last-child { border-bottom: none; }
-
-    .nav-logo {
+    /* NAV */
+    nav {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -601,12 +567,7 @@
 <nav>
   <div class="nav-left">
     <a href="#hero" class="active" onclick="showHome()">Home</a>
-    <div class="nav-projects">
-      <a href="#" onclick="showProjectsPage(); return false;">Projects ↓</a>
-      <div class="dropdown" id="nav-dropdown">
-        <!-- populated by JS -->
-      </div>
-    </div>
+    <a href="#" onclick="showProjectsPage(); return false;">Projects</a>
     <a href="#contact" onclick="showHome()">Contact</a>
   </div>
 
@@ -623,7 +584,6 @@
   <!-- HERO -->
   <section id="hero">
     <div class="hero-bg" id="hero-bg"></div>
-    <div class="hero-name" id="hero-name">Your Name</div>
     <div class="hero-meta" id="hero-meta">
       CREATIVE DIRECTOR<br>
       FILM · PHOTOGRAPHY
@@ -756,7 +716,6 @@
       .filter(p => p.published)
       .sort((a, b) => (a.order || 99) - (b.order || 99));
     renderProjects();
-    buildDropdown();
     buildFilters();
   }
 
