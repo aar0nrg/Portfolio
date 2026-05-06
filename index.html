@@ -58,7 +58,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 40px;
-      height: 70px;
+      height: 56px;
       background: var(--beige);
       border-bottom: 1px solid rgba(10,10,10,0.1);
     }
@@ -82,18 +82,18 @@
     .nav-left a:hover, .nav-right a:hover { opacity: 1; }
     .nav-left a.active { opacity: 1; text-decoration: underline; }
 
-    /* NAV */
-    nav {
+    .nav-logo {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      text-decoration: none;
-      color: var(--black);
+      text-decoration: none !important;
+      color: var(--black) !important;
+      opacity: 1 !important;
     }
 
     .nav-right {
@@ -345,9 +345,10 @@
     }
 
     .contact-email {
-      font-family: var(--serif);
-      font-size: clamp(28px, 5vw, 64px);
-      font-style: italic;
+      font-family: var(--mono);
+      font-size: clamp(14px, 1.5vw, 20px);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       text-decoration: none;
       color: var(--black);
       border-bottom: 1px solid var(--black);
@@ -733,9 +734,21 @@
       el.textContent = settings.email;
       el.href = 'mailto:' + settings.email;
     }
-    if (settings.instagram) document.getElementById('social-instagram').href = settings.instagram;
-    if (settings.youtube) document.getElementById('social-youtube').href = settings.youtube;
-    if (settings.tiktok) document.getElementById('social-tiktok').href = settings.tiktok;
+    if (settings.instagram) {
+      document.getElementById('social-instagram').href = settings.instagram;
+    } else {
+      document.getElementById('social-instagram').style.display = 'none';
+    }
+    if (settings.youtube) {
+      document.getElementById('social-youtube').href = settings.youtube;
+    } else {
+      document.getElementById('social-youtube').style.display = 'none';
+    }
+    if (settings.tiktok) {
+      document.getElementById('social-tiktok').href = settings.tiktok;
+    } else {
+      document.getElementById('social-tiktok').style.display = 'none';
+    }
 
     if (settings.hero_image) {
       document.getElementById('hero-bg').style.backgroundImage = `url('${settings.hero_image}')`;
