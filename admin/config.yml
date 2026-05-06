@@ -1,10 +1,8 @@
 backend:
   name: git-gateway
   branch: main
-
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
-
 collections:
   - name: "settings"
     label: "⚙️ Paramètres du site"
@@ -12,6 +10,7 @@ collections:
       - name: "general"
         label: "Identité & Infos générales"
         file: "data/settings.json"
+        format: json
         fields:
           - { label: "Ton nom", name: "name", widget: "string", default: "VOTRE NOM" }
           - { label: "Tagline — optionnel", name: "tagline", widget: "string", required: false, default: "" }
@@ -22,15 +21,15 @@ collections:
           - { label: "Bio (texte about)", name: "bio", widget: "text", default: "Votre bio ici." }
           - { label: "Photo hero", name: "hero_image", widget: "image", required: false }
           - { label: "Photo portrait (section about)", name: "portrait_image", widget: "image", required: false }
-
   - name: "projects"
     label: "📁 Projets"
     folder: "data/projects"
     create: true
+    format: json
     slug: "{{slug}}"
+    identifier_field: title
     fields:
       - { label: "Titre du projet", name: "title", widget: "string" }
-      - { label: "Slug (URL)", name: "slug", widget: "string" }
       - { label: "Tagline", name: "tagline", widget: "string", required: false, default: "" }
       - { label: "Client / Marque", name: "client", widget: "string", required: false, default: "" }
       - { label: "Année", name: "year", widget: "string", required: false, default: "" }
