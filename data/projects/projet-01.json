@@ -1,14 +1,14 @@
 {
-  "title": "Projet 01",
   "slug": "projet-01",
-  "tagline": "",
-  "client": "",
-  "year": "2024",
-  "category": "Commercial",
-  "cover_image": "",
   "video_url": "",
-  "description": "",
-  "gallery": [],
+  "client": "",
+  "published": true,
+  "tagline": "",
   "order": 1,
-  "published": true
+  "gallery": [],
+  "cover_image": "/images/uploads/dji_20260209212535_0642_d.jpg",
+  "title": "DROP MUSIC",
+  "description": "",
+  "year": "",
+  "category": null
 }
