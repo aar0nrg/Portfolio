@@ -1,3 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="site-title">Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Space+Mono:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --beige: #e8e4dd;
+      --beige-dark: #d4cfc7;
+      --black: #0a0a0a;
+      --dark: #141414;
+      --white: #f5f2ee;
+      --mono: 'Space Mono', monospace;
+      --script: 'Caveat', cursive;
+      --serif: 'EB Garamond', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--beige);
+      color: var(--black);
+      font-family: var(--mono);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
       position: fixed;
       width: 10px; height: 10px;
       background: var(--black);
@@ -664,11 +700,13 @@
   }
 
   async function loadProjects() {
-    // On essaie de charger un index ou on scanne les fichiers connus
-    const slugs = [
-      'projet-01','projet-02','projet-03','projet-04','projet-05',
-      'projet-06','projet-07','projet-08','projet-09','projet-10'
-    ];
+    let slugs = [];
+    try {
+      const r = await fetch('/data/projects/index.json');
+      if (r.ok) slugs = await r.json();
+    } catch(e) {
+      console.warn('index.json non trouvé');
+    }
     const loaded = [];
     for (const slug of slugs) {
       try {
@@ -676,7 +714,7 @@
         if (r.ok) loaded.push(await r.json());
       } catch(e) {}
     }
-    // Trier par order
+    // Trier par order si défini, sinon garder l'ordre de index.json
     projects = loaded
       .filter(p => p.published)
       .sort((a, b) => (a.order || 99) - (b.order || 99));
