@@ -1,5 +1,5 @@
 {
-  "slug": "projet-01",
+  slug: "{{fields.title | slugify}}"
   "video_url": "",
   "client": "",
   "published": true,
