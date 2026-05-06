@@ -254,6 +254,9 @@
       opacity: 1;
       transform: translateY(0);
     }
+    .project-banner-info, .project-banner-title, .project-banner-cta {
+      pointer-events: none;
+    }
 
     .project-banner-tagline { display: none; }
 
@@ -492,11 +495,13 @@
     .meta-value { opacity: 1; margin-bottom: 10px; }
 
     .project-description {
-      font-family: var(--serif);
-      font-size: 20px;
-      font-style: italic;
-      line-height: 1.7;
-      opacity: 0.8;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-style: normal;
+      letter-spacing: 0.04em;
+      line-height: 2;
+      opacity: 0.75;
+      text-transform: uppercase;
     }
 
     .project-video-wrap {
