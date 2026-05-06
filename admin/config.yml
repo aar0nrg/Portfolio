@@ -26,7 +26,7 @@ collections:
     folder: "data/projects"
     create: true
     format: json
-    slug: "{{slug}}"
+    slug: "{{fields.title | slugify}}"
     identifier_field: title
     fields:
       - { label: "Titre du projet", name: "title", widget: "string" }
