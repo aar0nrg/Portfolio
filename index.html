@@ -231,33 +231,36 @@
 
     .project-banner-info {
       position: absolute;
-      bottom: 60px;
-      left: 60px;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: white;
     }
 
     .project-banner-title {
       font-family: var(--mono);
-      font-size: clamp(28px, 4vw, 52px);
+      font-size: clamp(28px, 4vw, 56px);
       font-weight: 700;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       line-height: 1;
-      margin-bottom: 10px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .project-banner:hover .project-banner-title {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .project-banner-tagline {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      opacity: 0.7;
-    }
+    .project-banner-tagline { display: none; }
 
     .project-banner-cta {
       position: absolute;
-      bottom: 60px;
-      right: 60px;
+      bottom: 40px;
+      right: 50px;
       color: white;
       font-family: var(--mono);
       font-size: 10px;
@@ -265,10 +268,10 @@
       text-transform: uppercase;
       opacity: 0;
       transform: translateX(10px);
-      transition: opacity 0.3s, transform 0.3s;
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
     .project-banner:hover .project-banner-cta {
-      opacity: 0.8;
+      opacity: 0.7;
       transform: translateX(0);
     }
 
