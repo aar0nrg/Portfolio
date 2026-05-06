@@ -1,11 +1,11 @@
 {
+  "youtube": "",
+  "bio": "Votre bio ici.",
   "name": "VOTRE NOM",
   "tagline": "",
-  "email": "contact@votresite.com",
   "instagram": "",
-  "youtube": "",
+  "hero_image": "/images/uploads/hero-longue.jpg",
+  "portrait_image": "",
   "tiktok": "",
-  "bio": "Votre bio ici.",
-  "hero_image": "",
-  "portrait_image": ""
+  "email": "contact@votresite.com"
 }
